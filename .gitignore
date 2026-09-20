@@ -1,0 +1,37 @@
+.env
+.env.*
+!.env.example
+
+**/.env
+**/.env.*
+!**/.env.example
+
+node_modules/
+.next/
+dist/
+build/
+
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage/
+htmlcov/
+
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python package build metadata
+*.egg-info/
+
+# Python package build metadata
+*.egg-info/

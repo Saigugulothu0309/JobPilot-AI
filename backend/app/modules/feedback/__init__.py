@@ -1,0 +1,1 @@
+"""User-attributed opportunity feedback."""

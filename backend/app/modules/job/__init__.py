@@ -1,0 +1,1 @@
+"""Shared job domain and ingestion foundation."""
