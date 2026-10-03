@@ -252,6 +252,62 @@ def test_feedback_accepts_all_documented_types_and_updates_same_user_signal(
     assert missing_skill["note"] == "Docker"
 
 
+def test_feedback_proposals_are_authenticated_owner_scoped_and_paginated(
+    client: TestClient,
+) -> None:
+    assert client.get("/api/v1/feedback/proposals").status_code == 401
+
+    owner_headers = register(client, "user@example.com")
+    create_profile(client, owner_headers)
+    job_id = create_job(client, owner_headers)
+    feedback = client.post(
+        "/api/v1/feedback",
+        json={"job_id": job_id, "feedback_type": "WRONG_PREFERENCE"},
+        headers=owner_headers,
+    ).json()
+
+    for target_field, value in [
+        ("target_roles", "Backend Engineer"),
+        ("locations", "Remote"),
+        ("technologies", "Python"),
+    ]:
+        response = client.post(
+            "/api/v1/feedback/proposals",
+            json={
+                "feedback_id": feedback["id"],
+                "target_type": "PREFERENCE",
+                "target_field": target_field,
+                "proposed_value": {"value": [value]},
+            },
+            headers=owner_headers,
+        )
+        assert response.status_code == 200
+
+    all_proposals = client.get(
+        "/api/v1/feedback/proposals", params={"limit": 3}, headers=owner_headers
+    )
+    first_page = client.get(
+        "/api/v1/feedback/proposals", params={"limit": 2}, headers=owner_headers
+    )
+    second_page = client.get(
+        "/api/v1/feedback/proposals",
+        params={"limit": 2, "offset": 2},
+        headers=owner_headers,
+    )
+
+    assert all_proposals.status_code == 200
+    assert first_page.status_code == 200
+    assert second_page.status_code == 200
+    proposal_ids = [proposal["id"] for proposal in all_proposals.json()]
+    assert len(proposal_ids) == 3
+    assert [proposal["id"] for proposal in first_page.json()] == proposal_ids[:2]
+    assert [proposal["id"] for proposal in second_page.json()] == proposal_ids[2:]
+
+    other_headers = register(client, "other@example.com")
+    create_profile(client, other_headers)
+    assert client.get("/api/v1/feedback/proposals", headers=other_headers).json() == []
+
+
 def test_feedback_proposal_creation_wrong_preference(client: TestClient) -> None:
     headers = register(client, "user@example.com")
     create_profile(client, headers)

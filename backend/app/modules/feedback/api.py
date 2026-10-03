@@ -58,6 +58,22 @@ def list_job_feedback(
     return [JobFeedbackResponse.model_validate(item) for item in feedback]
 
 
+@router.get("/proposals", response_model=list[FeedbackProposalResponse])
+def list_feedback_proposals(
+    limit: int = Query(default=50, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db_session),
+) -> list[FeedbackProposalResponse]:
+    try:
+        proposals = JobFeedbackService(session).list_proposals_for_user(
+            current_user.id, limit, offset
+        )
+    except FeedbackNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    return [FeedbackProposalResponse.model_validate(item) for item in proposals]
+
+
 @router.post("/proposals", response_model=FeedbackProposalResponse)
 def create_feedback_proposal(
     payload: FeedbackProposalCreateRequest,

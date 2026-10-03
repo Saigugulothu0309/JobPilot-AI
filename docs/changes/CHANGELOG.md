@@ -26,3 +26,5 @@
 | CHANGE-0024 | 2026-09-09 | Bounded Frontend Workspace | Added JWT-backed safe dashboard, jobs, application save, activity, and notification UI | COMPLETED |
 | CHANGE-0025 | 2026-09-09 | Profile and Resume Readiness Workspace | Added authenticated profile, preferences, professional-data, and resume review UI | COMPLETED |
 | CHANGE-0026 | 2026-09-09 | Job Discovery & Ranking Workspace | Added authenticated job search, ranking, detail, feedback, and safe save UI | COMPLETED |
+| CHANGE-0027 | 2026-10-03 | Applications Workspace | Added authenticated application tracking, draft review, and revision approval UI | COMPLETED |
+| CHANGE-0028 | 2026-10-03 | Feedback Proposal API | Added authenticated owner-scoped proposal listing with bounded pagination | COMPLETED |

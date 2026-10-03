@@ -109,6 +109,20 @@ class JobFeedbackService:
             ).all()
         )
 
+    def list_proposals_for_user(
+        self, user_id: UUID, limit: int, offset: int
+    ) -> list[FeedbackProposal]:
+        profile = self._profile(user_id)
+        return list(
+            self.session.scalars(
+                select(FeedbackProposal)
+                .where(FeedbackProposal.profile_id == profile.id)
+                .order_by(FeedbackProposal.created_at.desc(), FeedbackProposal.id.asc())
+                .offset(offset)
+                .limit(limit)
+            ).all()
+        )
+
     def create_proposal(
         self,
         user_id: UUID,

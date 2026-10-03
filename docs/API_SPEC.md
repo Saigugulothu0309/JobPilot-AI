@@ -18,6 +18,7 @@ All routes except `/health`, registration, and login use JWT bearer authenticati
 | `POST /applications/records`; `GET /applications/records`, `/{id}`; `PUT /{id}` | Create/list/read/update private manual tracking record, including truthful `UNKNOWN` handling. |
 | `GET /activity`, `GET /notifications`, `POST /notifications/{id}/read` | Read owner activity/notifications and mark only owner notification read. |
 | `POST/GET /feedback` | Upsert/list private job feedback. Recording is informational until a proposal is confirmed. |
+| `GET /feedback/proposals` | List the authenticated user's feedback proposals with bounded `limit`/`offset` pagination. |
 | `POST /feedback/proposals` | Create owner proposal from matching feedback type. No durable profile mutation. |
 | `POST /feedback/proposals/{id}/confirm|reject|revoke` | Explicit state action. Confirm applies valid preference/skill proposal; reject preserves feedback; revoke restores/deletes the proposal-applied value where safe. Repeated terminal same action is idempotent. Alias `/{id}/{action}` exists. |
 
